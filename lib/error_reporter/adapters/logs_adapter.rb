@@ -1,4 +1,5 @@
-# note: sidekiq has it's own logging handler
+require_relative "base"
+
 module ErrorReporter
   module Adapters
     class LogsAdapter < Base

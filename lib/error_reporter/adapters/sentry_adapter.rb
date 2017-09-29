@@ -1,9 +1,5 @@
 module ErrorReporter
   module Adapters
-    # note: Sidekiq reporting works by requiring 'raygun/sidekiq'
-    #       in config/initializers/raygun.rb
-    # TODO:: pull this into gem with initializer callbacks
-    #       so we can require this without an initializer
     class SentryAdapter < Base
       class << self
         def configured?
@@ -12,8 +8,9 @@ module ErrorReporter
       end
 
       def report(exception)
-        opts = request.try(:env) || {}
+        opts               = request.try(:env) || {}
         opts[:custom_data] = context_hash if context_hash.present?
+
         # Raygun.track_exception(exception, opts={})
         #
         #   Request info is extracted from the 2nd arg, expecting

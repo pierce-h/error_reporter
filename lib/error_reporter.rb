@@ -4,6 +4,7 @@ module ErrorReporter
   SERVICES = {
     raygun: Adapters::RaygunAdapter,
     sentry: Adapters::SentryAdapter,
+    sentry: Adapters::AirbrakeAdapter,
     logs: Adapters::LogsAdapter
   }.freeze
 
