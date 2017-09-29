@@ -22,6 +22,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency "airbrake",     "~> 7.0"
+  spec.add_runtime_dependency "raygun4ruby",  "~> 2.4"
+  spec.add_runtime_dependency "sentry-raven", "~> 2.6"
   spec.add_runtime_dependency "colorize",     "~> 0.8.1"
 
   # Don't add more development dependencies here.

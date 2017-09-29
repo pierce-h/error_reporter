@@ -3,8 +3,10 @@ module ErrorReporter
     class Base
       attr_accessor :request, :context_hash
 
-      def self.configured?
-        raise NotImplementedError.new("You must override the #configured? method to be a ErrorReporterClient")
+      class << self
+        def configured?
+          raise NotImplementedError.new("You must override the #configured? method to be a ErrorReporterClient")
+        end
       end
 
       def report(exception)
