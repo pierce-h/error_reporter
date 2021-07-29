@@ -32,24 +32,22 @@ jobs:
         run: bundle exec rspec
 
   cd:
-    name: Publish to RubyGems
     if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs:
-      - ci
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        # Due to https://github.com/actions/runner/issues/849, we have to use quotes for '3.0'
+        ruby: ["3.0"]
 
+    name: Publish to RubyGems
+    runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v1
-
-      - name: GIT
-        run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
-
-      - name: Publish to RubyGems
-        uses: cadwallion/publish-rubygems-action@master
-        # continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
-          RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
-          RELEASE_COMMAND: rake release
+      - uses: actions/checkout@v2
+      - name: Set up Ruby and Build
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Test
+        run: gem release
