@@ -43,6 +43,9 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v1
 
+      - name: GIT
+        run: git config --global user.email "you@example.com" && git config --global user.name "Your Name"
+
       - name: Publish to RubyGems
         uses: cadwallion/publish-rubygems-action@master
         # continue-on-error: true
