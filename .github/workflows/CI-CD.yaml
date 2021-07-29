@@ -55,8 +55,8 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - name: Install Bundler
-        run: gem install bundler:2.2.24
+      # - name: Install Bundler
+      #   run: gem install bundler:2.2.24
 
       - name: Test
         run: bundle exec rake spec
@@ -66,4 +66,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
-          RELEASE_COMMAND: bundle exec rake release
+          RELEASE_COMMAND: rake release
