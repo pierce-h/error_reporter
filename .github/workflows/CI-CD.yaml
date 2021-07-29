@@ -33,6 +33,8 @@ jobs:
 
   cd:
     if: github.ref == 'refs/heads/master'
+    needs:
+      - ci
     strategy:
       fail-fast: false
       matrix:
@@ -54,4 +56,4 @@ jobs:
         run: bundle install
 
       - name: Publish
-        run: gem release -k ${{secrets.RUBYGEMS_API_KEY}}
+        run: bundle exec gem release -k ${{secrets.RUBYGEMS_API_KEY}}
