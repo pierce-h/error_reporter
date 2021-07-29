@@ -29,9 +29,9 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - name: Test
-        run: bundle exec rake spec
+        run: bundle exec rspec
 
-  deploy:
+  cd:
     name: Publish to RubyGems
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
