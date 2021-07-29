@@ -32,13 +32,28 @@ jobs:
         run: bundle exec rake spec
 
   deploy:
+    name: Publish to RubyGems
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs:
+      - ci
 
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout source
+        uses: actions/checkout@v1
 
-      - name: Publish to RubyGems
-        if: github.ref == 'refs/heads/master'
+      - uses: actions/checkout@v2
+      - name: Set up Ruby and Build
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Test
+        run: bundle exec rake spec
+
+      - name: Publish to NPM
         uses: cadwallion/publish-rubygems-action@master
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
