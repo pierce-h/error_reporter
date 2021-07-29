@@ -49,5 +49,9 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - name: Test
-        run: gem release
+
+      - name: Install Dependencies
+        run: bundle install
+
+      - name: Publish
+        run: gem release -k ${{secrets.RUBYGEMS_API_KEY}}
