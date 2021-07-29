@@ -49,7 +49,6 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v1
 
-      - uses: actions/checkout@v2
       - name: Set up Ruby and Build
         uses: ruby/setup-ruby@v1
         with:
