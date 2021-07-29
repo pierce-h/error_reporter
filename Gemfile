@@ -10,6 +10,7 @@ group :test do
 end
 
 group :test, :development do
+  gem "gem-release", "~> 2.2", ">= 2.2.2"
   gem "rake"
 end
 
