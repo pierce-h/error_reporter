@@ -61,7 +61,7 @@ jobs:
       - name: Test
         run: bundle exec rake spec
 
-      - name: Publish to NPM
+      - name: Publish to RubyGems
         uses: cadwallion/publish-rubygems-action@master
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
