@@ -35,25 +35,46 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs:
       - ci
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        # Due to https://github.com/actions/runner/issues/849, we have to use quotes for '3.0'
-        ruby: ["3.0"]
-
-    name: Publish to RubyGems
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby and Build
-        uses: ruby/setup-ruby@v1
+      - uses: GoogleCloudPlatform/release-please-action@v2
+        id: release
         with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          # The release type
+          release-type: ruby
+          # A name for the artifact releases are being created for
+          # which is the name of our gem
+          package-name: error_reporter
+          # Should breaking changes before 1.0.0 produce minor bumps?
+          bump-minor-pre-major: true
+          # Path to our version file to increment
+          version-file: "lib/error_reporter/version.rb"
 
-      - name: Install Dependencies
-        run: bundle install
+      # Checkout code if release was created
+      - uses: actions/checkout@v2
+        if: ${{ steps.release.outputs.release_created }}
 
-      - name: Publish
-        run: bundle exec gem release -k ${{secrets.RUBYGEMS_API_KEY}}
+        # Setup ruby if a release was created
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.0
+        if: ${{ steps.release.outputs.release_created }}
+
+        # Bundle install
+      - run: bundle install
+        if: ${{ steps.release.outputs.release_created }}
+
+      # Publish
+      - name: publish gem
+        run: |
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          gem build *.gemspec
+          gem push *.gem
+        env:
+          # Make sure to update the secret name
+          # if yours isn't named RUBYGEMS_API_KEY
+          GEM_HOST_API_KEY: "${{secrets.RUBYGEMS_API_KEY}}"
+        if: ${{ steps.release.outputs.release_created }}
