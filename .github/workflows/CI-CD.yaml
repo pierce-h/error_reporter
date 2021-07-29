@@ -36,30 +36,12 @@ jobs:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        # Due to https://github.com/actions/runner/issues/849, we have to use quotes for '3.0'
-        ruby: ["3.0"]
     needs:
       - ci
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v1
-
-      - name: Set up Ruby and Build
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
-      # - name: Install Bundler
-      #   run: gem install bundler:2.2.24
-
-      - name: Test
-        run: bundle exec rake spec
 
       - name: Publish to RubyGems
         uses: cadwallion/publish-rubygems-action@master
